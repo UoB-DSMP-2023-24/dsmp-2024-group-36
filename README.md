@@ -3,7 +3,7 @@
 ## Please edit the fields below with your information
 Group Number: 36
 
-Problem Assigned: Use pandas to complete the basic sorting of data
+Problem Assigned:
 
 
 Group Members: 
