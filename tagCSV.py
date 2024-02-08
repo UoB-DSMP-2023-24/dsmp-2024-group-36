@@ -1,6 +1,4 @@
 import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.cluster import KMeans
 csv_file_path = 'fake_transactional_data_24.csv'
 
 df = pd.read_csv(csv_file_path)
