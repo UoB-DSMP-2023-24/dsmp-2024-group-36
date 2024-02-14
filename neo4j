@@ -1,0 +1,7 @@
+LOAD CSV WITH HEADERS FROM 'https://gist.githubusercontent.com/noobwei/e4c454756666860e2f26626ea470e58b/raw/37149a7407d48cc83cd48d141a8c7e1612d8808e/fake_transactional_data_24.csv' AS row
+MERGE (fromAccount:Account {account_id: row.from_totally_fake_account})
+MERGE (toAccount:Account {account_id: row.to_randomly_generated_account})
+CREATE (fromAccount)-[:TRANSFERRED {
+    amount: toFloat(row.monopoly_money_amount),
+    date: row.not_happened_yet_date
+}]->(toAccount);

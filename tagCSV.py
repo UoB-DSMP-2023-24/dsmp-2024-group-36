@@ -1,105 +1,100 @@
 import pandas as pd
+
+
 csv_file_path = 'fake_transactional_data_24.csv'
 
+# 读取CSV文件
 df = pd.read_csv(csv_file_path)
 
-df_filtered = df[df['to_randomly_generated_account'].str.contains(r'\D', regex=True)]
-unique_shops = df_filtered['to_randomly_generated_account'].unique()
-
-# print(f"{len(unique_shops)} shops in list")
-# print("name list: ")
-# for shop in unique_shops:
-#     print(shop)
-import pandas as pd
-
+# 店铺标签和等级的字典
 shop_tags_and_levels = {
-    "CINEMA": ("Cinema", "Medium"),
-    "HIPSTER_COFFEE_SHOP": ("Coffee Shop", "Medium"),
-    "TOTALLY_A_REAL_COFFEE_SHOP": ("Coffee Shop", "Medium"),
-    "COFFEE_SHOP": ("Coffee Shop", "Low"),
-    "CAFE": ("Cafe", "Low"),
-    "A_CAFE": ("Cafe", "Low"),
-    "LOCAL_RESTAURANT": ("Restaurant", "Medium"),
-    "A_LOCAL_COFFEE_SHOP": ("Coffee Shop", "Low"),
-    "GOURMET_COFFEE_SHOP": ("High-End Coffee Shop", "High"),
-    "LOCAL_WATERING_HOLE": ("Bar", "Medium"),
-    "SANDWICH_SHOP": ("Fast Food Shop", "Low"),
-    "TOY_SHOP": ("Toy Shop", "Low"),
-    "PRETENTIOUS_COFFEE_SHOP": ("High-End Coffee Shop", "High"),
-    "BAR": ("Bar", "Medium"),
-    "PUB": ("Bar", "Medium"),
-    "COMIC_BOOK_SHOP": ("Bookstore", "Low"),
-    "LUNCH_VAN": ("Fast Food Shop", "Low"),
-    "DEPARTMENT_STORE": ("Retail Store", "Medium"),
-    "KEBAB_SHOP": ("Fast Food Shop", "Low"),
-    "WINE_BAR": ("Bar", "Medium"),
-    "ELECTRONICS_SHOP": ("Electronics", "Medium"),
-    "RESTAURANT": ("Restaurant", "Medium"),
-    "LOCAL_PUB": ("Bar", "Medium"),
-    "LUNCH_PLACE": ("Fast Food Shop", "Low"),
-    "FASHION_SHOP": ("Retail Store", "Medium"),
-    "FASHIONABLE_SPORTSWARE_SHOP": ("Luxury Store", "High"),
-    "SCHOOL_SUPPLY_STORE": ("Bookstore", "Low"),
-    "LOCAL_BOOKSHOP": ("Bookstore", "Low"),
-    "TRAINER_SHOP": ("Retail Store", "Medium"),
-    "BOOKSHOP": ("Bookstore", "Low"),
-    "KIDS_ACTIVITY_CENTRE": ("Other", "Medium"),
-    "VIDEO_GAME_STORE": ("Electronics", "Medium"),
-    "CLOTHES_SHOP": ("Retail Store", "Medium"),
-    "TAKEAWAY_CURRY": ("Fast Food Shop", "Low"),
-    "TECH_SHOP": ("Electronics", "High"),
-    "NERDY_BOOK_STORE": ("Bookstore", "Low"),
-    "WHISKEY_BAR": ("Bar", "High"),
-    "PET_TOY_SHOP": ("Pet Shop", "Low"),
-    "DVD_SHOP": ("Electronics", "Low"),
-    "CHILDRENDS_SHOP": ("Toy Shop", "Low"),
-    "GAME_SHOP": ("Electronics", "Medium"),
-    "INDIAN_RESTAURANT": ("Restaurant", "Medium"),
-    "COCKTAIL_BAR": ("Bar", "High"),
-    "RUNNING_SHOP": ("Retail Store", "Medium"),
-    "DIY_STORE": ("Other", "Medium"),
-    "COOKSHOP": ("Other", "Medium"),
-    "HOME_IMPROVEMENT_STORE": ("Other", "Medium"),
-    "PET_SHOP": ("Pet Shop", "Low"),
-    "CHINESE_TAKEAWAY": ("Fast Food Shop", "Low"),
-    "BUTCHERS": ("Butcher's", "Medium"),
-    "SECOND_HAND_BOOKSHOP": ("Bookstore", "Low"),
-    "G&T_BAR": ("Bar", "Medium"),
-    "GREENGROCER": ("Supermarket", "Low"),
-    "JEWLLERY_SHOP": ("Luxury Store", "High"),
-    "ACCESSORY_SHOP": ("Retail Store", "Medium"),
-    "TAKEAWAY": ("Fast Food Shop", "Low"),
-    "KIDS_CLOTHING_SHOP": ("Retail Store", "Low"),
-    "SPORT_SHOP": ("Retail Store", "Medium"),
-    "STEAK_HOUSE": ("Restaurant", "High"),
-    "HIPSTER_ELECTRONICS_SHOP": ("Electronics", "High"),
-    "CHINESE_RESTAURANT": ("Restaurant", "Medium"),
-    "SEAFOOD_RESAURANT": ("Restaurant", "High"),
-    "STREAMING_SERVICE": ("Other", "Medium"),
-    "GYM": ("Other", "Medium"),
-    "WHISKEY_SHOP": ("Luxury Store", "High"),
-    "TEA_SHOP": ("Tea Shop", "Medium"),
-    "RESTAURANT_VOUCHER": ("Restaurant", "Medium"),
-    "ROASTERIE": ("Coffee Shop", "Medium"),
-    "LIQUOR_STORE": ("Bar", "Medium"),
-    "WINE_CELLAR": ("Bar", "High"),
-    "LARGE_SUPERMARKET": ("Supermarket", "Low"),
-    "EXPRESS_SUPERMARKET": ("Supermarket", "Low"),
-    "BUTCHER": ("Butcher's", "Medium"),
-    "A_SUPERMARKET": ("Supermarket", "Low"),
-    "THE_SUPERMARKET": ("Supermarket", "Low")
+    "CINEMA": "Cinema",
+    "HIPSTER_COFFEE_SHOP": "Coffee Shop",
+    "TOTALLY_A_REAL_COFFEE_SHOP": "Coffee Shop",
+    "COFFEE_SHOP": "Coffee Shop",
+    "CAFE": "Cafe",
+    "A_CAFE": "Cafe",
+    "LOCAL_RESTAURANT": "Restaurant",
+    "A_LOCAL_COFFEE_SHOP": "Coffee Shop",
+    "GOURMET_COFFEE_SHOP": "High-End Coffee Shop",
+    "LOCAL_WATERING_HOLE": "Bar",
+    "SANDWICH_SHOP": "Fast Food Shop",
+    "TOY_SHOP": "Toy Shop",
+    "PRETENTIOUS_COFFEE_SHOP": "High-End Coffee Shop",
+    "BAR": "Bar",
+    "PUB": "Bar",
+    "COMIC_BOOK_SHOP": "Bookstore",
+    "LUNCH_VAN": "Fast Food Shop",
+    "DEPARTMENT_STORE": "Retail Store",
+    "KEBAB_SHOP": "Fast Food Shop",
+    "WINE_BAR": "Bar",
+    "ELECTRONICS_SHOP": "Electronics",
+    "RESTAURANT": "Restaurant",
+    "LOCAL_PUB": "Bar",
+    "LUNCH_PLACE": "Fast Food Shop",
+    "FASHION_SHOP": "Retail Store",
+    "FASHIONABLE_SPORTSWARE_SHOP": "Luxury Store",
+    "SCHOOL_SUPPLY_STORE": "Bookstore",
+    "LOCAL_BOOKSHOP": "Bookstore",
+    "TRAINER_SHOP": "Retail Store",
+    "BOOKSHOP": "Bookstore",
+    "KIDS_ACTIVITY_CENTRE": "Other",
+    "VIDEO_GAME_STORE": "Electronics",
+    "CLOTHES_SHOP": "Retail Store",
+    "TAKEAWAY_CURRY": "Fast Food Shop",
+    "TECH_SHOP": "Electronics",
+    "NERDY_BOOK_STORE": "Bookstore",
+    "WHISKEY_BAR": "Bar",
+    "PET_TOY_SHOP": "Pet Shop",
+    "DVD_SHOP": "Electronics",
+    "CHILDRENDS_SHOP": "Toy Shop",
+    "GAME_SHOP": "Electronics",
+    "INDIAN_RESTAURANT": "Restaurant",
+    "COCKTAIL_BAR": "Bar",
+    "RUNNING_SHOP": "Retail Store",
+    "DIY_STORE": "Other",
+    "COOKSHOP": "Other",
+    "HOME_IMPROVEMENT_STORE": "Other",
+    "PET_SHOP": "Pet Shop",
+    "CHINESE_TAKEAWAY": "Fast Food Shop",
+    "BUTCHERS": "Butcher's",
+    "SECOND_HAND_BOOKSHOP": "Bookstore",
+    "G&T_BAR": "Bar",
+    "GREENGROCER": "Supermarket",
+    "JEWLLERY_SHOP": "Luxury Store",
+    "ACCESSORY_SHOP": "Retail Store",
+    "TAKEAWAY": "Fast Food Shop",
+    "KIDS_CLOTHING_SHOP": "Retail Store",
+    "SPORT_SHOP": "Retail Store",
+    "STEAK_HOUSE": "Restaurant",
+    "HIPSTER_ELECTRONICS_SHOP": "Electronics",
+    "CHINESE_RESTAURANT": "Restaurant",
+    "SEAFOOD_RESAURANT": "Restaurant",
+    "STREAMING_SERVICE": "Other",
+    "GYM": "Other",
+    "WHISKEY_SHOP": "Luxury Store",
+    "TEA_SHOP": "Tea Shop",
+    "RESTAURANT_VOUCHER": "Restaurant",
+    "ROASTERIE": "Coffee Shop",
+    "LIQUOR_STORE": "Bar",
+    "WINE_CELLAR": "Bar",
+    "LARGE_SUPERMARKET": "Supermarket",
+    "EXPRESS_SUPERMARKET": "Supermarket",
+    "BUTCHER": "Butcher's",
+    "A_SUPERMARKET": "Supermarket",
+    "THE_SUPERMARKET": "Supermarket"
 }
 
-shop_name_to_tag_level = {}
-for name, (tag, level) in shop_tags_and_levels.items():
-    shop_name_to_tag_level[name] = (tag, level)
+# 更新DataFrame
+df['Shop_type'] = df['to_randomly_generated_account'].apply(lambda x: shop_tags_and_levels.get(x, "Transfer"))
 
-def assign_tag_and_level(shop_name):
-    return shop_name_to_tag_level.get(shop_name, ("Transfer", "Unknown"))
+# 输出更新后的DataFrame
+print(df.head())
 
-df['Shop_type'], df['Expected consumption level'] = zip(*df['to_randomly_generated_account'].apply(assign_tag_and_level))
-
+# 保存到新的CSV文件
 df.to_csv('tagged_data.csv', index=False)
+
+
 
 
 
