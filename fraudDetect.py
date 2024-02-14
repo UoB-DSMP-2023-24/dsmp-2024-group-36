@@ -2,19 +2,23 @@ import pandas as pd
 from sklearn.ensemble import IsolationForest
 
 data = pd.read_csv("shop_transfer_data.csv")
-X = data[["monopoly_money_amount", "Shop_type", "Expected consumption level"]]
 
-X_encoded = pd.get_dummies(X)
 
-isolation_forest = IsolationForest(n_estimators=1000, contamination=0.1, random_state=42)
+averages = pd.read_csv("shop_statistics.csv")
 
-isolation_forest.fit(X_encoded)
-scores = isolation_forest.decision_function(X_encoded)
-data["anomaly_score"] = scores
+data_merged = pd.merge(data, averages, on="to_randomly_generated_account", how="left")
 
-threshold = data["anomaly_score"].quantile(0.01) # need survey to determin the quantile
-anomalies = data[data["anomaly_score"] < threshold]
+X = data_merged[["monopoly_money_amount", "Average_Amount"]]
 
-print("Detected anomalies:")
+isolation_forest = IsolationForest(n_estimators=1000, contamination='auto', random_state=42)
+isolation_forest.fit(X)
+scores = isolation_forest.decision_function(X)
+data_merged["anomaly_score"] = scores
+
+threshold = data_merged["anomaly_score"].quantile(0.06)
+anomalies = data_merged[data_merged["anomaly_score"] < threshold]
+
+print("Detected probable fraud:")
 print(anomalies)
-anomalies.to_csv("shop_anomalies.csv", index=False)
+
+anomalies.to_csv("probable_fraud.csv", index=False)
